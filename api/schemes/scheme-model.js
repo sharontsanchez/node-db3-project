@@ -139,9 +139,16 @@ async function findById(scheme_id) {
       ]
   */
 
-function findSteps(scheme_id) { 
-}
+async function findSteps(scheme_id) { 
+  const rows = await db('schemes as sc')
+    .leftJoin('steps as st', 'sc.scheme_id', 'st.scheme_id')
+    .where('sc.scheme_id', scheme_id)
+    .select('st.step_id', 'st.step_number', 'st.instructions', 'sc.scheme_name')
+    .orderBy('st.step_number');
 
+  if (!rows[0].step_id) return []
+    return rows
+}
 // EXERCISE D
   /*
     1D- This function creates a new scheme and resolves to _the newly created scheme_.
